@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutor Dashboard</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            margin: auto;
+        }
+        .session-container {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            text-align: left;
+        }
+        /* Style all labels */
+        label {
+            font-weight: 600;
+            display: block;
+            margin: 10px 0 5px;
+        }
+        /* Style all inputs */
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        /* Style buttons */
+        button {
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .accept-btn {
+            background-color: green;
+            color: white;
+        }
+        .accept-btn:hover {
+            background-color: darkgreen;
+        }
+        .decline-btn {
+            background-color: red;
+            color: white;
+        }
+        .decline-btn:hover {
+            background-color: darkred;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Tutor Dashboard</h1>
+        <h2>Pending Session Requests</h2>
+
+        {% if sessions %}
+            {% for session in sessions %}
+                <div class="session-container">
+                    <p><strong>Student:</strong> {{ session.student_name }}</p>
+                    <p><strong>Unit:</strong> {{ session.unit }}</p>
+                    <p><strong>Date & Time:</strong> {{ session.date }} {{ session.time }}</p>
+
+                    <form action="{{ url_for('update_session', session_id=session._id|string) }}" method="POST">
+                        <label for="phone_number">Phone Number:</label>
+                        <input type="text" id="phone_number" name="phone_number" placeholder="Enter phone number" required>
+
+                        <label for="meeting_link">Virtual Meeting Link:</label>
+                        <input type="url" id="meeting_link" name="meeting_link" placeholder="Enter Zoom/Google Meet link">
+
+                        <label for="venue">Physical Meeting Location:</label>
+                        <input type="text" id="venue" name="venue" placeholder="Enter venue (optional)">
+
+                        <button type="submit" name="status" value="Accepted" class="accept-btn">Accept</button>
+                        <button type="submit" name="status" value="Declined" class="decline-btn">Decline</button>
+                    </form>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p style="color: red;">No pending session requests.</p>
+        {% endif %}
+    </div>
+
+</body>
+</html>

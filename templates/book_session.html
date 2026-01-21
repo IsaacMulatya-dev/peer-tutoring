@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book a Session</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body class="book-session-page">
+    <div class="container">
+        <h1>Book a Tutoring Session</h1>
+
+        <form method="POST" action="{{ url_for('book_session') }}">
+            <div class="form-group">
+                <label for="unit">Select Subject:</label>
+                <select name="unit" id="unit" onchange="filterTutorsByUnit()" required>
+                    <option value="">-- Select a Subject --</option>
+                    {% for unit in units %}
+                        <option value="{{ unit }}" {% if selected_subject == unit %}selected{% endif %}>{{ unit }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="tutor">Select a Tutor:</label>
+                <select name="tutor" id="tutor" required>
+                    <option value="">-- Select a Tutor --</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Availability:</label>
+                <div id="availability">Select a tutor to view availability.</div>
+            </div>
+
+            <button type="submit" class="btn-primary">Book Session</button>
+        </form>
+
+        <div class="links">
+            <a href="{{ url_for('dashboard') }}" class="btn-secondary">Back to Dashboard</a>
+        </div>
+    </div>
+
+    <div id="tutor-data" data-tutors='{{ tutors | tojson | safe }}' hidden></div>
+    <div id="availability-data" data-availability='{{ availability | tojson | safe }}' hidden></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            filterTutorsByUnit();
+            document.getElementById('unit').addEventListener('change', filterTutorsByUnit);
+            document.getElementById('tutor').addEventListener('change', updateAvailability);
+        });
+        
+        function filterTutorsByUnit() {
+            const unitSelect = document.getElementById('unit');
+            const tutorSelect = document.getElementById('tutor');
+            const availabilityDiv = document.getElementById('availability');
+        
+            tutorSelect.innerHTML = '<option value="">-- Select a Tutor --</option>';
+            availabilityDiv.innerHTML = 'Select a tutor to view availability.';
+        
+            const selectedUnit = unitSelect.value;
+            if (!selectedUnit) return;
+        
+            const tutorDataElement = document.getElementById('tutor-data');
+            if (!tutorDataElement) return;
+        
+            const tutors = JSON.parse(tutorDataElement.dataset.tutors);
+        
+            // Filter tutors who teach the selected unit
+            const filteredTutors = tutors.filter(tutor => tutor.units && tutor.units.includes(selectedUnit));
+        
+            if (filteredTutors.length === 0) {
+                tutorSelect.innerHTML = '<option value="">No tutors available for this unit</option>';
+                return;
+            }
+        
+            filteredTutors.forEach(tutor => {
+                const option = document.createElement('option');
+                option.value = tutor._id;
+                option.textContent = `${tutor.first_name} ${tutor.last_name}`;
+                tutorSelect.appendChild(option);
+            });
+        }
+        
+        function updateAvailability() {
+            const tutorSelect = document.getElementById('tutor');
+            const availabilityDiv = document.getElementById('availability');
+        
+            const availabilityDataElement = document.getElementById('availability-data');
+            if (!availabilityDataElement) return;
+        
+            const availabilityData = JSON.parse(availabilityDataElement.dataset.availability);
+            const selectedTutorId = tutorSelect.value;
+        
+            if (!selectedTutorId || !availabilityData[selectedTutorId]) {
+                availabilityDiv.innerHTML = '<p style="color: red;">Not Available</p>';
+                return;
+            }
+        
+            availabilityDiv.innerHTML = '<p style="color: green;">Available</p>';
+        }
+        
+        </script>
+        
+        
+</body>
+</html>

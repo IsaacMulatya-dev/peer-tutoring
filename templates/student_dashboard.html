@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('{{ url_for('static', filename='images/dashboard_bg.jpg') }}') no-repeat center center fixed;
+            background-size: cover;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            margin: auto;
+        }
+        .session-container {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            text-align: left;
+        }
+        .cancel-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .cancel-btn:hover {
+            background-color: darkred;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Student Dashboard</h1>
+        <h2>Upcoming Sessions</h2>
+
+        {% if sessions %}
+    {% for session in sessions %}
+        <div class="session-container accepted">
+            <p><strong>Tutor:</strong> {{ session.tutor_name }}</p>
+            <p><strong>Unit:</strong> {{ session.unit }}</p>
+            <p><strong>Date & Time:</strong> {{ session.date }} {{ session.time }}</p>
+            <p><strong>Phone Number:</strong> {{ session.phone_number }}</p>
+
+            {% if session.meeting_link %}
+                <p><strong>Virtual Meeting Link:</strong> <a href="{{ session.meeting_link }}" target="_blank">{{ session.meeting_link }}</a></p>
+            {% endif %}
+
+            {% if session.venue %}
+                <p><strong>Venue:</strong> {{ session.venue }}</p>
+            {% endif %}
+
+            {% if session.additional_notes %}
+                <p><strong>Notes:</strong> {{ session.additional_notes }}</p>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No upcoming sessions.</p>
+{% endif %}
+
+    </div>
+
+</body>
+</html>
