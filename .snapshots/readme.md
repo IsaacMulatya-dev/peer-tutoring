@@ -1,11 +1,11 @@
-# Snapshots Directory
+# Project Snapshots
 
-This directory contains snapshots of your code for AI interactions. Each snapshot is a markdown file that includes relevant code context and project structure information.
+This directory is used to store snapshots of the codebase. It helps keep track of the project's state, structure, and active files at different points of development.
 
-## What's included in snapshots?
-- Selected code files and their contents
-- Project structure (if enabled)
-- Your prompt/question for the AI
+## Structure
+* **Source Files:** Copies of key codebase files.
+* **Project Tree:** A snapshot of the directory layout.
+* **Context:** The associated notes or queries for the snapshot.
 
 ## Configuration
-You can customize snapshot behavior in `config.json`.
+You can customize ignore paths and snapshot behavior in `config.json`.
